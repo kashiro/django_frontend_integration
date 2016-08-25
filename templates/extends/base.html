@@ -1,0 +1,29 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ app_name }}</title>
+  {% if settings.DEBUG %}
+    <link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.css' %}">
+  {% else %}
+    <link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}">
+  {% endif %}
+</head>
+<body>
+  {% block content %}
+  {% endblock %}
+
+  <ul>
+    <li><a href="{% url 'app1' %}">app1 page</a></li>
+    <li><a href="{% url 'app2' %}">app2 page</a></li>
+  </ul>
+  {% if settings.DEBUG %}
+    <script src="{% static 'jquery/dist/jquery.js' %}"></script>
+    <script src="{% static 'bootstrap/dist/js/bootstrap.js' %}"></script>
+  {% else %}
+    <script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
+  {% endif %}
+</body>
+</html>
