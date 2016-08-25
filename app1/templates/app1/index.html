@@ -1,4 +1,10 @@
 {% extends 'extends/base.html' %}
+{% load staticfiles %}
+
 {% block content %}
 <p>This is <strong>app1</strong> page</p>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'app1/scripts/app.js' %}"></script>
 {% endblock %}
