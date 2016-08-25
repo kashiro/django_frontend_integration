@@ -15,7 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from app1 import views as app1_views
+from app2 import views as app2_views
+
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    url(r'^app2', app2_views.render_app, name='app2'),
+    url(r'^app1', app1_views.render_app, name='app1'),
+    url(r'^$', app1_views.render_app),
 ]
