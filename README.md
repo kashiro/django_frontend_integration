@@ -1,6 +1,13 @@
 
 # Django Front-end Integration
 
+```
+$ pip install -r requirements.txt
+$ npm install
+$ ./manager.py migrate
+$ ./manager.py runserver
+```
+
 ## Run scripts tests
 
 ```
