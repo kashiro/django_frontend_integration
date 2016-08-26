@@ -1,6 +1,7 @@
 {
   "name": "django_frontend_integration",
   "private": true,
+  "homepage": "https://github.com/kashiro/django_frontend_integration",
   "scripts": {
     "test": "karma start --single-run",
     "test-watch": "karma start"
@@ -14,5 +15,6 @@
     "karma": "^1.2.0",
     "karma-chrome-launcher": "^2.0.0",
     "karma-jasmine": "^1.0.2"
-  }
+  },
+  "version": "1.0.0"
 }
