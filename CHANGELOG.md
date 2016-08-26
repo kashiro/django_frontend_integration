@@ -1,3 +1,13 @@
+## 1.1.0 (2016-08-26)
+
+
+#### Bug Fixes
+
+* **build:**
+  * exclude node_modules for collectstatic command ([1b65ba62](https://github.com/kashiro/django_frontend_integration/commit/1b65ba624571342dbe3c79112d02439ab5b54ae3))
+  * exclude node_modules for collectstatic command ([78941017](https://github.com/kashiro/django_frontend_integration/commit/789410172a37da4da817398cb7351df892f09b76))
+
+
 ## 1.0.0 (2016-08-26)
 
 
