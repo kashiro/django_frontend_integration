@@ -1,0 +1,18 @@
+{
+  "extends": "google",
+  "env": {
+    "browser": true,
+    "es6": true,
+    "jasmine": true
+  },
+  "rules": {
+    "require-jsdoc": [0],
+    "valid-jsdoc": [0],
+    "max-len": [0],
+    "max-nested-callbacks": [0]
+  },
+  "globals": {
+    "$"         : true,
+    "App"       : true
+  }
+}
