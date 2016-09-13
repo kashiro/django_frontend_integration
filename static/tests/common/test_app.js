@@ -13,7 +13,7 @@
       describe('if Instance do not have id', function(){
         it('return null', function(){
           instance = new App(); 
-          expect(instance.bow()).toBe(null);
+          expect(instance.bow()).toEqual('This does not have id.');
         }); 
       });     
     });
