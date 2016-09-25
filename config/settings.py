@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'ffp_yzfn%5vq0k1^_gxsd5@3-g2+i=35^&)8si=!q73z#%sei+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', True)
+DEBUG = False if os.getenv('DEBUG') == 'False' else True
 
 ALLOWED_HOSTS = []
 
@@ -59,7 +59,6 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -67,7 +66,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'templates.context_processors.dfi'
+                'common.context_processors.dfi'
             ],
         },
     },
@@ -123,8 +122,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.CachedStaticFilesStorage'
+######################################################
+# THIS IS VERY IMPORTANT FOR THIS PHILOSOPHIES
+# By default 'django.contrib.staticfiles.finders.AppDirectoriesFinder' also is added in STATICFILES_FINDERS.
+# But we will disable AppDirectoriesFinder to mange static files in static directory at top of project root using node task
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder'
+]
+######################################################
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, '.tmp')]
 if DEBUG:
-    STATICFILES_DIRS + [os.path.join(BASE_DIR, 'node_modules')]
+    STATICFILES_DIRS += [os.path.join(BASE_DIR, 'node_modules')]

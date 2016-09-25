@@ -28,7 +28,9 @@ import path from 'path';
 import gulp from 'gulp';
 import del from 'del';
 import runSequence from 'run-sequence';
+import swPrecache from 'sw-precache';
 import gulpLoadPlugins from 'gulp-load-plugins';
+import {output as pagespeed} from 'psi';
 import pkg from './package.json';
 
 const $ = gulpLoadPlugins();
@@ -53,7 +55,9 @@ gulp.task('images', () =>
 
 // Copy all files at the root level (app)
 gulp.task('copy', () =>
-  gulp.src([], {
+  gulp.src([
+    'static/*'
+  ], {
     dot: true
   }).pipe(gulp.dest('.tmp'))
     .pipe($.size({title: 'copy'}))
@@ -74,7 +78,7 @@ gulp.task('styles', () => {
   ];
 
   // For best performance, don't add Sass partials to `gulp.src`
-  return gulp.src('./static/styles/**/*.scss')
+  return gulp.src('./static/styles/**/*.scss', {base: 'static'})
     .pipe($.newer('.tmp/styles'))
     .pipe($.sourcemaps.init())
     .pipe($.sass({
@@ -93,27 +97,33 @@ gulp.task('styles', () => {
 // to enable ES2015 support remove the line `"only": "gulpfile.babel.js",` in the
 // `.babelrc` file.
 gulp.task('scripts', () =>
-    gulp.src([
-      // Note: Since we are not using useref in the scripts build pipeline,
-      //       you need to explicitly list your scripts here in the right order
-      //       to be correctly concatenated
-      './static/scripts/common/app.js',
-      './static/scripts/app1/app.js',
-      './static/scripts/app2/app.js'
-    ])
-      .pipe($.newer('.tmp/scripts'))
-      .pipe($.sourcemaps.init())
-      .pipe($.babel())
-      .pipe($.concat('main.min.js'))
-      .pipe($.uglify({preserveComments: 'some'}))
-      // Output files
-      .pipe($.size({title: 'scripts'}))
-      .pipe($.sourcemaps.write('.'))
-      .pipe(gulp.dest('.tmp/scripts'))
+  gulp.src([
+    // Note: Since we are not using useref in the scripts build pipeline,
+    //       you need to explicitly list your scripts here in the right order
+    //       to be correctly concatenated
+    './static/scripts/common/app.js',
+    './static/scripts/app1/app.js',
+    './static/scripts/app2/app.js'
+  ], {base: 'static'})
+    .pipe($.newer('.tmp/scripts'))
+    .pipe($.sourcemaps.init())
+    .pipe($.babel())
+    .pipe($.concat('main.min.js'))
+    .pipe($.uglify({preserveComments: 'some'}))
+    .pipe($.size({title: 'scripts'}))
+    .pipe($.sourcemaps.write('.'))
+    .pipe(gulp.dest('.tmp/scripts'))
 );
 
 // Clean output directory
 gulp.task('clean', () => del(['.tmp'], {dot: true}));
+
+gulp.task('watch', () => {
+  gulp.watch(['static/styles/**/*.{scss,css}'], ['styles']);
+  gulp.watch(['static/scripts/**/*.js'], ['lint', 'scripts']);
+  gulp.watch(['static/images/**/*'], ['images']);
+});
+
 
 // Build production files, the default task
 gulp.task('default', ['clean'], cb =>
@@ -123,3 +133,51 @@ gulp.task('default', ['clean'], cb =>
     cb
   )
 );
+
+// Run PageSpeed Insights
+gulp.task('pagespeed', cb =>
+  // Update the below URL to the public URL of your site
+  pagespeed('example.com', {
+    strategy: 'mobile'
+    // By default we use the PageSpeed Insights free (no API key) tier.
+    // Use a Google Developer API key if you have one: http://goo.gl/RkN0vE
+    // key: 'YOUR_API_KEY'
+  }, cb)
+);
+
+// Copy over the scripts that are used in importScripts as part of the generate-service-worker task.
+gulp.task('copy-sw-scripts', () => {
+  return gulp.src(['node_modules/sw-toolbox/sw-toolbox.js', 'static/scripts/common/sw/runtime-caching.js'])
+    .pipe(gulp.dest('.tmp/scripts/common/sw'));
+});
+
+// See http://www.html5rocks.com/en/tutorials/service-worker/introduction/ for
+// an in-depth explanation of what service workers are and why you should care.
+// Generate a service worker file that will provide offline functionality for
+// local resources. This should only be done for the 'dist' directory, to allow
+// live reload to work as expected when serving from the 'app' directory.
+gulp.task('generate-service-worker', ['copy-sw-scripts'], () => {
+  const rootDir = '.tmp';
+  const filepath = path.join(rootDir, 'service-worker.js');
+
+  return swPrecache.write(filepath, {
+    // Used to avoid cache conflicts when serving on localhost.
+    cacheId: pkg.name || 'web-starter-kit',
+    // sw-toolbox.js needs to be listed first. It sets up methods used in runtime-caching.js.
+    importScripts: [
+      'scripts/common/sw/sw-toolbox.js',
+      'scripts/common/sw/runtime-caching.js'
+    ],
+    staticFileGlobs: [
+      // Add/remove glob patterns to match your directory setup.
+      `${rootDir}/images/**/*`,
+      `${rootDir}/scripts/**/*.js`,
+      `${rootDir}/styles/**/*.css`,
+      `${rootDir}/*.{html,json}`
+    ],
+    // Translates a static file path to the relative URL that it's served from.
+    // This is '/' rather than path.sep because the paths returned from
+    // glob always use '/'.
+    stripPrefix: rootDir + '/'
+  });
+});

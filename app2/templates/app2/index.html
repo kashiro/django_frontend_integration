@@ -1,10 +1,15 @@
-{% extends 'extends/base.html' %}
+{% extends 'common/extends/base.html' %}
 {% load staticfiles %}
 
 {% block content %}
-<p>This is <strong>app2</strong> page</p>
+<div class="media app2">
+  <div class="media-left">
+    <img src="{% static 'images/app2/sample.jpg' %}">
+  </div>
+  <div class="media-body">
+    <p>This is <strong>app2</strong> page</p>
+  </div>
+</div>
 {% endblock %}
 
-{% block scripts %}
-<script src="{% static 'app2/scripts/app.js' %}"></script>
-{% endblock %}
+
