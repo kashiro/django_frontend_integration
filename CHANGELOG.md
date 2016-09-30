@@ -1,3 +1,12 @@
+## 2.0.0 (2016-09-29)
+
+
+#### Features
+
+* **build:** use CachedStaticFilesStorage for file storage (#2) ([c4b7cc37](https://github.com/kashiro/django_frontend_integration/commit/c4b7cc374f0660ce164839471b69dfc60896b0e3))
+* **gulp:** added gulp tasks ([70b4bfdc](https://github.com/kashiro/django_frontend_integration/commit/70b4bfdc6c54fce43735c7447c8c0076c37d0d73))
+
+
 ## 1.1.0 (2016-08-26)
 
 
