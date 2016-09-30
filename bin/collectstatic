@@ -1,0 +1,9 @@
+#! /bin/sh
+
+npm install
+npm run build
+rm  .tmp/**/*.map
+
+export DEBUG=False
+./manage.py collectstatic
+unset DEBUG

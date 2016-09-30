@@ -14,13 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-from django.contrib import admin
 from app1 import views as app1_views
 from app2 import views as app2_views
-
+from django.views.generic import TemplateView
 
 urlpatterns = [
     url(r'^app2', app2_views.render_app, name='app2'),
     url(r'^app1', app1_views.render_app, name='app1'),
+    url(r'^manifest.json$', TemplateView.as_view(template_name='common/manifest.json', content_type='application/json')),
+    url(r'^manifest.webapp$', TemplateView.as_view(template_name='common/manifest.webapp', content_type='application/manifest+json')),
     url(r'^$', app1_views.render_app),
 ]

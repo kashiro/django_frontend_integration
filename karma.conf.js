@@ -18,11 +18,11 @@ module.exports = function(config) {
       'node_modules/jquery/dist/jquery.js',
       'node_modules/bootstrap/dist/js/bootstrap.js',
 
-      'common/static/common/scripts/app.js',
-      'app1/static/app1/scripts/app.js',
-      'app2/static/app2/scripts/app.js',
+      'static/scripts/common/app.js',
+      'static/scripts/app1/app.js',
+      'static/scripts/app2/app.js',
 
-      '*/static/*/tests/test_*.js'
+      'static/tests/**/test_*.js'
     ],
 
 
